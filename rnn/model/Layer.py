@@ -15,23 +15,18 @@ class Layer(object):
         Constructor
         '''
         self.__lastLayer = lastLayer
-        self._neurons = []
+        self.__neurons = []
     
-    def _addNeuron(self, neuron):
-        self._neurons.append(neuron)
+    def add_neuron(self, neuron):
+        self.__neurons.append(neuron)
         
-    def _output(self, inputs):
-        result = numpy.zeros(len(self._neurons))
-        for i, neuron in enumerate(self._neurons):
-            out = neuron._output(inputs)
-            result[i] = out
+    def output(self, inputs):
+        result = numpy.zeros(len(self.__neurons))
+        for i, neuron in enumerate(self.__neurons):
+            output = neuron.output(inputs)
+            result[i] = output
         return result
-    
-    def _updateDelta(self, inputs, error):
-        for neuron in self._neurons:
-            neuron._updateDelta(inputs, error)
             
-    def _update(self):
-        for neuron in self._neurons:
-            neuron._update()
+    def get_neurons(self):
+        return self.__neurons
     

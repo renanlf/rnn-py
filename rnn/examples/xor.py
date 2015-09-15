@@ -31,6 +31,6 @@ if __name__ == '__main__':
               topology = [2,1], 
               momentum = 0.1)
     
-    errors = mlp.trainData(allInputs = inputs, allCorrect = xor, epochs = 20)
+    errors = mlp.train_data(train = inputs, target = xor, epochs = 20)
     print errors
-    print mlp.getWeights()
+    print mlp.get_weights()

@@ -19,47 +19,64 @@ class Neuron(object):
         '''
         # caso queira passar os pesos ou deixar que o construtor os crie
         if(type(weights) == int):
-            self._weights = numpy.float128(numpy.random.uniform(-0.5,0.5,weights))
-            self.__deltas = numpy.zeros(weights)
+            self.__weights = numpy.float128(numpy.random.uniform(-0.5,0.5,weights))
+            self.__Deltas = numpy.zeros(weights)
         else:
-            self._weights = weights
-            self.__deltas = numpy.zeros(len(weights))
+            self.__weights = weights
+            self.__Deltas = numpy.zeros(len(weights))
             
         self.__function = function
         self.__n = n
-        self._bias = numpy.float128(numpy.random.uniform(-0.5,0.5,1))
-        self.__deltaBias = 0
-        self._sigma = 0
+        self.__bias = numpy.float128(numpy.random.uniform(-0.5,0.5,1))
+        self.__Delta_bias = 0
+        self.__delta = 0
         
         self.__momentum = momentum
         
-    def _output(self, inputs):
+    def output(self, inputs):
         self._inputs = inputs
-        try:
-            E = inputs * self._weights
-        except RuntimeWarning:
-            print inputs, self._weights
         
-        self._a = numpy.sum(E) + self._bias
-        result = self.__function(self._a)
+        E = inputs * self.__weights
+        
+        self.__out = numpy.sum(E) + self.__bias
+        result = self.__function(self.__out)
         
         return result
         
-    def _updateDelta(self):
+    def update_delta(self):
         
-        self.__deltas = self.__deltas +  self.__n * self._sigma * self._inputs
-#         self.__deltas = self.__deltas + self.__momentum * self.__deltas
+        self.__Deltas = self.__Deltas +  self.__n * self.__delta * self._inputs
+#         self.__Deltas = self.__Deltas + self.__momentum * self.__Deltas
         
-        self.__deltaBias = self.__deltaBias + self.__n * self._sigma
+        self.__Delta_bias = self.__Delta_bias + self.__n * self.__delta
         
-    def _update(self):
-        self._weights = self._weights + self.__deltas       
+    def update(self):
+        self.__weights = self.__weights + self.__Deltas       
             
-        self._bias = self._bias + self.__deltaBias
+        self.__bias = self.__bias + self.__Delta_bias
         
-        self.__deltas = numpy.zeros(len(self._weights))
-        self.__deltaBias = 0
+        # limpa os Deltas
         
-    def _getWeight(self, n):
-        return self._weights[n]
+        self.__Deltas = numpy.zeros(len(self.__weights))
+        self.__Delta_bias = 0
+        
+    def get_weight_n(self, n):
+        return self.__weights[n]
+    
+    # encapsulamento
+    
+    def get_weights(self):
+        return self.__weights
+    
+    def get_bias(self):
+        return self.__bias
+    
+    def get_delta(self):
+        return self.__delta
+    
+    def set_delta(self, delta):
+        self.__delta = delta
+        
+    def get_out(self):
+        return self.__out
     
