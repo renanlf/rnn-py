@@ -20,7 +20,7 @@ class Genetic_Algorithm(object):
         if(genotype_type == Genetic_Algorithm.TYPE_FLOAT):            
             for i in range(0, size):
                 genotype = numpy.random.uniform(low = -0.5, high = 0.5, size = length_genotype)
-                individuals[i] = Individual(genotype)
+                individuals.append(Individual(genotype))
                 
         elif(genotype_type == Genetic_Algorithm.TYPE_BINARY):
             for i in range(0, size):
@@ -132,6 +132,9 @@ class Genetic_Algorithm(object):
             
     def get_best_individual(self):
         return self.__best_individual
+    
+    def get_best_individual_fenotype(self):
+        return self.__best_individual_fenotype
             
     def print_individuals(self):
         for individual in self.__individuals:

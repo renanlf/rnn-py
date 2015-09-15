@@ -68,8 +68,14 @@ class Neuron(object):
     def get_weights(self):
         return self.__weights
     
+    def set_weights(self, weights):
+        self.__weights = weights
+    
     def get_bias(self):
         return self.__bias
+    
+    def set_bias(self, bias):
+        self.__bias = bias
     
     def get_delta(self):
         return self.__delta

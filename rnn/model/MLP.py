@@ -14,7 +14,7 @@ class MLP(object):
     __layers = []
     __dfunction = 0
     __lenOutput = 0
-    def __init__(self, function, dfunction, n, features=1, topology=[], momentum = 0.1):
+    def __init__(self, function, dfunction, features, topology, n = 0.1,momentum = 0.1):
         '''
         Constructor
         '''
