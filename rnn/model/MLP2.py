@@ -4,66 +4,66 @@ Created on 18/08/2015
 @author: renan
 '''
 import numpy
-from Model.Layer import Layer
-from Model.Neuron import Neuron
+from model.Layer import Layer
+from model.Neuron import Neuron
+
 class MLP(object):
     '''
     classdocs
     '''
-    layers = []
-    error = 0
-    dfunction = 0
-    lenOutput = 0
+    __layers = []
+    __dfunction = 0
+    __lenOutput = 0
     def __init__(self, function, dfunction, n, features=1, topology=[], momentum = 0.1):
         '''
         Constructor
         '''
-        self.dfunction = dfunction
-        self.lenOutput = topology[-1]
+        self.__dfunction = dfunction
+        self.__lenOutput = topology[-1]
         for i, neuronsLayer in enumerate(topology):
             if i == 0:
-                self.createLayer(neurons=neuronsLayer, weights=features, function=function, n=n, momentum=momentum)
+                self.__createLayer(neurons=neuronsLayer, weights=features, function=function, n=n, momentum=momentum)
             else:
-                self.createLayer(neurons=neuronsLayer, weights=topology[i-1], function=function, n=n, momentum=momentum)
+                self.__createLayer(neurons=neuronsLayer, weights=topology[i-1], function=function, n=n, momentum=momentum)
     
     def addLayer(self, layer):
-        self.layers.append(layer)
+        self.__layers.append(layer)
         
-    def createLayer(self, neurons, weights, function, n, momentum=0.1):
+    def __createLayer(self, neurons, weights, function, n, momentum=0.1):
         layer = Layer()
         
         i = 0
         while i < neurons:
-            layer.addNeuron(Neuron(weights=weights, function=function, n=n, momentum=momentum))
+            layer._addNeuron(Neuron(weights=weights, function=function, n=n, momentum=momentum))
             i += 1
             
-        self.layers.append(layer)
+        self.__layers.append(layer)
         
     def output(self, inputs):
         inp = inputs
         
-        for layer in self.layers:
-            out = layer.output(inp)
+        for layer in self.__layers:
+            out = layer._output(inp)
             inp = out
             
         return out
     
-    def train(self, inputs, correct, log=False):
+    def __train(self, inputs, correct, log=False):
             
-        indexLastLayer = len(self.layers) - 1
-        lastLayer = self.layers[indexLastLayer]
+        indexLastLayer = len(self.__layers) - 1
+        lastLayer = self.__layers[indexLastLayer]
         
         out = self.output(inputs)
         if log:
             print out, correct
             
         # calcula erros da camada de saida
-        for i, neuron in enumerate(lastLayer.neurons):
+        for i, neuron in enumerate(lastLayer._neurons):
             outNeuron = out[i]
             correctNeuron = correct[i]
             
-            neuron.sigma =  self.dfunction(neuron.a) * (correctNeuron - outNeuron)
-            neuron.updateDelta()
+            neuron._sigma =  self.__dfunction(neuron._a) * (correctNeuron - outNeuron)
+            neuron._updateDelta()
             
         # cria uma lista com os indices das camadas ocultas            
         indexLayers = range(0, indexLastLayer)
@@ -71,74 +71,68 @@ class MLP(object):
             
         # para cada camada...
         for l in indexLayers:
-            layer = self.layers[l]
-            nextLayer = self.layers[l + 1]
+            layer = self.__layers[l]
+            nextLayer = self.__layers[l + 1]
                 
             # para cada neuronio...
-            for i, neuron in enumerate(layer.neurons):
+            for i, neuron in enumerate(layer._neurons):
                 sumNextLayerSigmas = 0
                 
-                # para cada neuronio da camada a frente...
-                for nextLayerNeuron in nextLayer.neurons:
+                # para cada neuronio da camada _a frente...
+                for nextLayerNeuron in nextLayer._neurons:
                     
                     # calcule os seus sigmas com os seus pesos de entrada
                     # utilizando o indice i estou pegando exatamente
                     # o peso que sai do neuron e entra no nextLayerNeuron
-                    sumNextLayerSigmas += nextLayerNeuron.sigma * nextLayerNeuron.weights[i]
+                    sumNextLayerSigmas += nextLayerNeuron._sigma * nextLayerNeuron._weights[i]
                         
-                outNeuron = neuron.output(neuron.inputs)
-                neuron.sigma = self.dfunction(neuron.a) * sumNextLayerSigmas
-                neuron.updateDelta()
+                outNeuron = neuron._output(neuron._inputs)
+                neuron._sigma = self.__dfunction(neuron._a) * sumNextLayerSigmas
+                neuron._updateDelta()
                 
         return out, correct
         
-    def updateAllNeurons(self):
-        for layer in self.layers:
-            for neuron in layer.neurons:
-                neuron.update()
-                
-    def getError(self, allInputs, allCorrect):
-        error = 0
-        
-        for inputs, correct in zip(allInputs, allCorrect):
-            out = self.output(inputs)
-            error += (correct - out)**2
-        
-        return error/len(allInputs)
+    def __updateAllNeurons(self):
+        for layer in self.__layers:
+            for neuron in layer._neurons:
+                neuron._update()
     
-    def trainAllData(self, allInputs, allCorrect, log=False):
-        error = 0
-        for i, inputs in enumerate(allInputs):
-            correct = allCorrect[i]
-            
-            out, correct = self.train(inputs, correct, log)
-            
-            error += (correct - out)**2
-            
-        self.updateAllNeurons()
+    def trainData(self, allInputs, allCorrect, epochs = 1, log=False):
+        result = numpy.zeros(epochs)
+        lenAllInputs = len(allInputs)
         
-        return error/len(allInputs)
+        for epoch in range(0, epochs):
+            for i, inputs in enumerate(allInputs):
+                correct = allCorrect[i]
+                
+                out, correct = self.__train(inputs, correct, log)
+                
+                result[epoch] = result[epoch] + ((correct - out)**2)/lenAllInputs
+                
+            self.__updateAllNeurons()
+        
+        return result
     
     def updateN(self, n):
-        for layer in self.layers:
+        for layer in self.__layers:
             for neuron in layer.neurons:
                 neuron.n = n
                 
         
     def getWeights(self, path=''):
         string = ''
-        for i, layer in enumerate(self.layers):
+        for i, layer in enumerate(self.__layers):
             string += 'Layer' + str(i + 1)
             
-            for j, neuron in enumerate(layer.neurons):
+            for j, neuron in enumerate(layer._neurons):
                 string += '\n   Neuron'+ str(j+1) + ':'
                 
-                for k, weight in enumerate(neuron.weights):
+                for k, weight in enumerate(neuron._weights):
                     if k > 0:
                         string += ','
                     string += str(weight)
                     
-                string += ','+str(neuron.bias)
+                string += ','+str(neuron._bias)
                     
             string += '\n'
 

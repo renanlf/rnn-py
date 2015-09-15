@@ -4,8 +4,6 @@ Created on 18/08/2015
 @author: renan
 '''
 import numpy
-import warnings
-from Model.NeuralNetworkError import NeuralNetworkError
 
 class Neuron(object):
     
@@ -21,47 +19,47 @@ class Neuron(object):
         '''
         # caso queira passar os pesos ou deixar que o construtor os crie
         if(type(weights) == int):
-            self.weights = numpy.float128(numpy.random.uniform(-0.5,0.5,weights))
-            self.deltas = numpy.zeros(weights)
+            self._weights = numpy.float128(numpy.random.uniform(-0.5,0.5,weights))
+            self.__deltas = numpy.zeros(weights)
         else:
-            self.weights = weights
-            self.deltas = numpy.zeros(len(weights))
+            self._weights = weights
+            self.__deltas = numpy.zeros(len(weights))
             
-        self.function = function
-        self.n = n
-        self.bias = numpy.float128(numpy.random.uniform(-0.5,0.5,1))
-        self.deltaBias = 0
-        self.sigma = 0
+        self.__function = function
+        self.__n = n
+        self._bias = numpy.float128(numpy.random.uniform(-0.5,0.5,1))
+        self.__deltaBias = 0
+        self._sigma = 0
         
-        self.momentum = momentum
+        self.__momentum = momentum
         
-    def output(self, inputs):
-        self.inputs = inputs
+    def _output(self, inputs):
+        self._inputs = inputs
         try:
-            E = inputs * self.weights
+            E = inputs * self._weights
         except RuntimeWarning:
-            print inputs, self.weights
+            print inputs, self._weights
         
-        self.a = numpy.sum(E) + self.bias
-        result = self.function(self.a)
+        self._a = numpy.sum(E) + self._bias
+        result = self.__function(self._a)
         
         return result
         
-    def updateDelta(self):
+    def _updateDelta(self):
         
-        self.deltas = self.deltas +  self.n * self.sigma * self.inputs
-#         self.deltas = self.deltas + self.momentum * self.deltas
+        self.__deltas = self.__deltas +  self.__n * self._sigma * self._inputs
+#         self.__deltas = self.__deltas + self.__momentum * self.__deltas
         
-        self.deltaBias = self.deltaBias + self.n * self.sigma
+        self.__deltaBias = self.__deltaBias + self.__n * self._sigma
         
-    def update(self):
-        self.weights = self.weights + self.deltas       
+    def _update(self):
+        self._weights = self._weights + self.__deltas       
             
-        self.bias = self.bias + self.deltaBias
+        self._bias = self._bias + self.__deltaBias
         
-        self.deltas = numpy.zeros(len(self.weights))
-        self.deltaBias = 0
+        self.__deltas = numpy.zeros(len(self._weights))
+        self.__deltaBias = 0
         
-    def getWeight(self, n):
-        return self.weights[n]
+    def _getWeight(self, n):
+        return self._weights[n]
     
