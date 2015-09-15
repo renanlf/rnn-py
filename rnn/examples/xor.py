@@ -5,7 +5,7 @@ Created on 15/09/2015
 '''
 import numpy
 
-from model.MLP2 import MLP
+from model.MLP import MLP
 
 def sig(x):
     return 1 / (1 + numpy.e**(-x))
