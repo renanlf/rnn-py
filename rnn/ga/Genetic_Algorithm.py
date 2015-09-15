@@ -31,48 +31,50 @@ class Genetic_Algorithm(object):
             
     create_individuals = staticmethod(create_individuals)
 
-    def __init__(self, individuals, mutation_rate, cross_rate, genotype, fenotype, genotype_type = TYPE_FLOAT):
+    def __init__(self, individuals, mutation_rate, genotype, fenotype, genotype_type = TYPE_FLOAT):
         '''
         Constructor
         '''
         self.__mutation_rate = mutation_rate
-        self.__cross_rate = 0.5
         self.__genotype_type = genotype_type
         self.__length_genotype = genotype
         self.__fenotype = fenotype
+        self.__best_individual_fenotype = -1
         
         self.__individuals = Genetic_Algorithm.create_individuals(individuals, genotype, genotype_type)
         
     def crossover(self, individual_a, individual_b):
-            if(self.__genotype_type == Genetic_Algorithm.TYPE_FLOAT):
-                return None
-            
-            elif(self.__genotype_type == Genetic_Algorithm.TYPE_BINARY):
                                   
-                position = numpy.random.randint(low = 0, high = self.__length_genotype, size = 1)
+        position = numpy.random.randint(low = 0, high = self.__length_genotype, size = 1)
                     
-                new_genotype_a = numpy.zeros(self.__length_genotype)
-                new_genotype_b = numpy.zeros(self.__length_genotype)
+        new_genotype_a = numpy.zeros(self.__length_genotype)
+        new_genotype_b = numpy.zeros(self.__length_genotype)
+                  
+        new_genotype_a[0:position] = individual_a.get_genotype()[0:position]
+        new_genotype_b[0:position] = individual_b.get_genotype()[0:position]
+                   
+        new_genotype_a[position:self.__length_genotype] = individual_a.get_genotype()[position:self.__length_genotype]
+        new_genotype_b[position:self.__length_genotype] = individual_b.get_genotype()[position:self.__length_genotype]
                     
-                new_genotype_a[0:position] = individual_a.get_genotype()[0:position]
-                new_genotype_b[0:position] = individual_b.get_genotype()[0:position]
+        new_individual_a = Individual(new_genotype_a)
+        new_individual_b = Individual(new_genotype_b)
                     
-                new_genotype_a[position:self.__length_genotype] = individual_a.get_genotype()[position:self.__length_genotype]
-                new_genotype_b[position:self.__length_genotype] = individual_b.get_genotype()[position:self.__length_genotype]
-                    
-                new_individual_a = Individual(new_genotype_a)
-                new_individual_b = Individual(new_genotype_b)
-                    
-                return new_individual_a, new_individual_b
+        return new_individual_a, new_individual_b
                 
     def mutate(self, individual):
+        probs = numpy.random.random(self.__length_genotype)
+        mut   = probs < self.__mutation_rate
+        
+        if numpy.sum(mut) == 0: 
+            return
+        
         if(self.__genotype_type == Genetic_Algorithm.TYPE_FLOAT):
-            return None
+            for i in range(0, self.__length_genotype):
+                if(mut[i]):
+                    value = numpy.random.uniform(low = -1, high = 1, size = 1)
+                    individual.get_genotype()[i] = individual.get_genotype()[i] * value
         
         elif(self.__genotype_type == Genetic_Algorithm.TYPE_BINARY):
-            probs = numpy.random.random(self.__length_genotype)
-            mut   = probs < self.__mutation_rate
-            
             for i in range(0, self.__length_genotype):
                 if(mut[i]):
                     individual.get_genotype()[i] = not individual.get_genotype()[i]
@@ -80,7 +82,7 @@ class Genetic_Algorithm(object):
     def execute(self, generations = 1):
         fenotypes = numpy.zeros(len(self.__individuals))
         
-        for generation in (0, generations):
+        for generation in range(0, generations):
             
             new_generation = list()
             
@@ -88,7 +90,10 @@ class Genetic_Algorithm(object):
                 fenotypes[i] = self.__fenotype(individual)
             
             best_individual = numpy.argmax(fenotypes)
-            self.__best_individual = self.__individuals[best_individual]
+            
+            if fenotypes[best_individual] > self.__best_individual_fenotype:            
+                self.__best_individual = self.__individuals[best_individual]
+                self.__best_individual_fenotype = fenotypes[best_individual]
             
             #normalizando os fenotipos
             fenotypes = fenotypes/numpy.sum(fenotypes)
@@ -102,8 +107,10 @@ class Genetic_Algorithm(object):
                 i = 0
                 value = 0
                 top_value = 0
+                
                 while(len(selected_individuals) < 2):
                     top_value += fenotypes[i]
+                    
                     if(probs[0] < top_value and probs[0] >= value):
                         selected_individuals.append(self.__individuals[i])
                         
