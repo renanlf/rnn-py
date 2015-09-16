@@ -4,8 +4,11 @@ Created on 18/08/2015
 @author: renan
 '''
 import numpy
+import cv2
+
 from model.Layer import Layer
 from model.Neuron import Neuron
+from cv2 import getTickCount
 
 class MLP(object):
     '''
@@ -54,8 +57,8 @@ class MLP(object):
         last_layer = self.__layers[index_last_layer]
         
         out = self.output(inputs)
-        if log:
-            print out, correct
+#         if log:
+#             print out, correct
             
         # calcula erros da camada de saida
         for i, neuron in enumerate(last_layer.get_neurons()):
@@ -102,14 +105,24 @@ class MLP(object):
         len_all_inputs = len(train)
         
         for epoch in range(0, epochs):
+            
+            if log:
+                print "Executando Epoca %d..." %(epoch+1)
+                e1 = cv2.getTickCount()
+            
             for i, inputs in enumerate(train):
                 correct = target[i]
                 
-                out, correct = self.__train(inputs, correct, log)
+                output, correct = self.__train(inputs, correct, log)
                 
-                result[epoch] = result[epoch] + ((correct - out)**2)/len_all_inputs
+                result[epoch] = result[epoch] + numpy.mean((correct - output)**2)/len_all_inputs
                 
             self.__update()
+            
+            if log:
+                e2 = getTickCount()
+                time = (e2 - e1)/cv2.getTickFrequency()
+                print "Epoca %d Resultado = %f, Tempo de Execucao %f segundos" %(epoch+1,result[epoch], time)
         
         return result                
         
