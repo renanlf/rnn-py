@@ -124,8 +124,21 @@ class MLP(object):
                 time = (e2 - e1)/cv2.getTickFrequency()
                 print "Epoca %d Resultado = %f, Tempo de Execucao %f segundos" %(epoch+1,result[epoch], time)
         
-        return result                
-        
+        return result          
+    
+    def get_error(self, test_input, test_target):
+        total_correct = 0
+        for inputs, target in zip(test_input, test_target):
+            output = self.output(inputs)
+            
+            label_output = numpy.argmax(output)
+            label_target = numpy.argmax(target)
+            
+            if label_output == label_target:
+                total_correct += 1
+                  
+        return total_correct/len(test_input)
+    
     def get_weights(self, path=''):
         string = ''
         for i, layer in enumerate(self.__layers):
