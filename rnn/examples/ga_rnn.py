@@ -51,19 +51,20 @@ if __name__ == '__main__':
         
         pos = 0
         
-        for layer in mlp.get_layers():
-            for neuron in layer.get_neurons():
+        for i, layer in enumerate(mlp.get_layers()):
+            for j, neuron in enumerate(layer.get_neurons()):
                 
                 end_neuron_position = pos + len(neuron.get_weights())
-                bias_position       = pos + len(neuron.get_weights()) + 1
                 
                 try:
                     neuron.get_weights()[:] = genotype[pos: end_neuron_position]
                 except ValueError:
-                    print pos, end_neuron_position, len(neuron.get_weights()), bias_position
-                neuron.set_bias(genotype[bias_position])
+                    print i, j
+                    return None
+                                                        
+                neuron.set_bias(genotype[end_neuron_position])
                 
-                pos += len(neuron.get_weights()) - 1
+                pos = end_neuron_position + 1
         
         len_train = len(train)
             
@@ -77,13 +78,16 @@ if __name__ == '__main__':
                 
         return accept
     
-    ga = Genetic_Algorithm(individuals = 10, 
+    ga = Genetic_Algorithm(individuals = 50, 
                            mutation_rate = 0.1,
-                           genotype = 14, 
+                           # (4 caracteristicas + 1 do bias) * 2 neuronios = 10
+                           # (2 saidas de neuronio + 1 do bias) * 3 neuronios de saida = 9
+                           # total de pesos 10+9 = 19
+                           genotype = 19, 
                            fenotype = fenotype, 
                            genotype_type = Genetic_Algorithm.TYPE_FLOAT)
     
 #     ga.print_individuals()
     ga.execute(generations = 100)
 #     ga.print_individuals()
-    print "Best Individual for last generation", ga.get_best_individual().get_genotype(), ga.get_best_individual_fenotype()
+    print "Best Individual for all generations", ga.get_best_individual().get_genotype(), ga.get_best_individual_fenotype()
