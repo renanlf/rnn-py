@@ -14,7 +14,6 @@ class Layer(object):
         '''
         Constructor
         '''
-        self.__lastLayer = lastLayer
         self.__neurons = []
     
     def add_neuron(self, neuron):
@@ -24,7 +23,8 @@ class Layer(object):
         result = numpy.zeros(len(self.__neurons))
         for i, neuron in enumerate(self.__neurons):
             output = neuron.output(inputs)
-            result[i] = output
+            #optimizing
+            result.itemset(i, output)
         return result
             
     def get_neurons(self):
