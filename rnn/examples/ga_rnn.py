@@ -78,8 +78,8 @@ if __name__ == '__main__':
                 
         return accept
     
-    ga = Genetic_Algorithm(individuals = 50, 
-                           mutation_rate = 0.2,
+    ga = Genetic_Algorithm(individuals = 100, 
+                           mutation_rate = 0.1,
                            # (4 caracteristicas + 1 do bias) * 2 neuronios = 10
                            # (2 saidas de neuronio + 1 do bias) * 3 neuronios de saida = 9
                            # total de pesos 10+9 = 19
