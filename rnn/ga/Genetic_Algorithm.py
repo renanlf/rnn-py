@@ -71,7 +71,7 @@ class Genetic_Algorithm(object):
         if(self.__genotype_type == Genetic_Algorithm.TYPE_FLOAT):
             for i in range(0, self.__length_genotype):
                 if(mut[i]):
-                    value = numpy.random.uniform(low = -1, high = 1, size = 1)
+                    value = numpy.random.uniform(low = -2, high = 2, size = 1)
                     individual.get_genotype()[i] = individual.get_genotype()[i] * value
         
         elif(self.__genotype_type == Genetic_Algorithm.TYPE_BINARY):
@@ -79,10 +79,13 @@ class Genetic_Algorithm(object):
                 if(mut[i]):
                     individual.get_genotype()[i] = not individual.get_genotype()[i]
                     
-    def execute(self, generations = 1):
+    def execute(self, generations = 1, log = False):
         fenotypes = numpy.zeros(len(self.__individuals))
         
         for generation in range(0, generations):
+            
+            if log:
+                print "Executing Generation %d" % (generation + 1)
             
             new_generation = list()
             
@@ -94,6 +97,8 @@ class Genetic_Algorithm(object):
             if fenotypes[best_individual] > self.__best_individual_fenotype:            
                 self.__best_individual = self.__individuals[best_individual]
                 self.__best_individual_fenotype = fenotypes[best_individual]
+                if log:
+                    print "New Best Individual Fenotype = %f" % (self.__best_individual_fenotype)
             
             #normalizando os fenotipos
             fenotypes = fenotypes/numpy.sum(fenotypes)
