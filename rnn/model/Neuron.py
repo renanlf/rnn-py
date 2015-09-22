@@ -5,6 +5,8 @@ Created on 18/08/2015
 '''
 import numpy
 
+from model.Functions import sig
+
 class Neuron(object):
     
     
@@ -13,7 +15,7 @@ class Neuron(object):
     classdocs
     '''
 
-    def __init__(self, weights, function, n = 0.05, bias = 0, momentum = 0.1):
+    def __init__(self, weights, function = sig, bias = 0, momentum = 0.1):
         '''
         Constructor
         '''
@@ -26,7 +28,7 @@ class Neuron(object):
             self.__Deltas = numpy.zeros(len(weights))
             
         self.__function = function
-        self.__n = n
+        
         self.__bias = numpy.float128(numpy.random.uniform(-0.5,0.5,1))
         self.__Delta_bias = 0
         self.__delta = 0
@@ -43,12 +45,12 @@ class Neuron(object):
         
         return result
         
-    def update_delta(self):
+    def update_delta(self, n = 0.01):
         
-        self.__Deltas = self.__Deltas +  self.__n * self.__delta * self._inputs
+        self.__Deltas = self.__Deltas +  n * self.__delta * self._inputs
 #         self.__Deltas = self.__Deltas + self.__momentum * self.__Deltas
         
-        self.__Delta_bias = self.__Delta_bias + self.__n * self.__delta
+        self.__Delta_bias = self.__Delta_bias + n * self.__delta
         
     def update(self):
         self.__weights = self.__weights + self.__Deltas       

@@ -7,12 +7,6 @@ import numpy
 
 from model.MLP import MLP
 
-def sig(x):
-    return 1 / (1 + numpy.e**(-x))
-    
-def dsig(x):
-    return (numpy.e**(-x))/((1 + numpy.e**(-x))**2)
-
 def createData():
     inputs = numpy.ndarray((10,2))
     inputs[:,0] = numpy.random.randint(low=0, high=2, size=10)
@@ -24,9 +18,7 @@ def createData():
 if __name__ == '__main__':
     inputs, xor = createData()
     
-    mlp = MLP(function = sig, 
-              dfunction=dsig,
-              n = 0.1, 
+    mlp = MLP(n = 0.1, 
               features = 2, 
               topology = [2,1], 
               momentum = 0.1)

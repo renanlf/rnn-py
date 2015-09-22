@@ -46,6 +46,8 @@ if __name__ == '__main__':
               features = 4,
               topology = [2,3])
     
+    best_mlp = mlp
+    
     def fenotype(individual):
         genotype = individual.get_genotype()
         
@@ -91,3 +93,21 @@ if __name__ == '__main__':
     ga.execute(generations = 100)
 #     ga.print_individuals()
     print "Best Individual for all generations", ga.get_best_individual().get_genotype(), ga.get_best_individual_fenotype()
+    
+    genotype = ga.get_best_individual().get_genotype()
+        
+    pos = 0
+    
+    for i, layer in enumerate(mlp.get_layers()):
+        for j, neuron in enumerate(layer.get_neurons()):
+            
+            end_neuron_position = pos + len(neuron.get_weights())
+            
+            neuron.get_weights()[:] = genotype[pos: end_neuron_position]
+                                                    
+            neuron.set_bias(genotype[end_neuron_position])
+            
+            pos = end_neuron_position + 1
+            
+    mlp.get_weights('pesos_ga_iris.mlp')
+    

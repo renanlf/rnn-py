@@ -9,6 +9,7 @@ import cv2
 from model.Layer import Layer
 from model.Neuron import Neuron
 from cv2 import getTickCount
+from model.Functions import sig, dsig
 
 class MLP(object):
     '''
@@ -17,27 +18,28 @@ class MLP(object):
     __layers = []
     __dfunction = 0
     __lenOutput = 0
-    def __init__(self, function, dfunction, features, topology, n = 0.1,momentum = 0.1):
+    def __init__(self, features, topology, function = sig, dfunction = dsig, n = 0.1, momentum = 0.1):
         '''
         Constructor
         '''
         self.__dfunction = dfunction
         self.__lenOutput = topology[-1]
+        self.__n = n
         for i, neuronsLayer in enumerate(topology):
             if i == 0:
-                self.__createLayer(neurons=neuronsLayer, weights=features, function=function, n=n, momentum=momentum)
+                self.__createLayer(neurons=neuronsLayer, weights=features, function=function, momentum=momentum)
             else:
-                self.__createLayer(neurons=neuronsLayer, weights=topology[i-1], function=function, n=n, momentum=momentum)
+                self.__createLayer(neurons=neuronsLayer, weights=topology[i-1], function=function, momentum=momentum)
     
     def addLayer(self, layer):
         self.__layers.append(layer)
         
-    def __createLayer(self, neurons, weights, function, n, momentum=0.1):
+    def __createLayer(self, neurons, weights, function, momentum=0.1):
         layer = Layer()
         
         i = 0
         while i < neurons:
-            layer.add_neuron(Neuron(weights=weights, function=function, n=n, momentum=momentum))
+            layer.add_neuron(Neuron(weights=weights, function=function, momentum=momentum))
             i += 1
             
         self.__layers.append(layer)
@@ -66,7 +68,7 @@ class MLP(object):
             correctNeuron = correct[i]
             
             neuron.set_delta(self.__dfunction(neuron.get_out()) * (correctNeuron - output_neuron))
-            neuron.update_delta()
+            neuron.update_delta(self.__n)
             
         # cria uma lista com os indices das camadas ocultas            
         index_layers = range(0, index_last_layer)
@@ -91,7 +93,7 @@ class MLP(object):
                         
                 output_neuron = neuron.output(neuron._inputs)
                 neuron.set_delta(self.__dfunction(neuron.get_out()) * sum_next_layer_deltas)
-                neuron.update_delta()
+                neuron.update_delta(self.__n)
                 
         return out, correct
         
