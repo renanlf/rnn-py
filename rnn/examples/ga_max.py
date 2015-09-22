@@ -21,5 +21,4 @@ if __name__ == '__main__':
     ga.print_individuals()
     ga.execute(generations=10)
     ga.print_individuals()
-    print "Best Individual for all generations", ga.get_best_individual().get_genotype(), \
-        ga.get_best_individual_fenotype()
+    print "Best Individual for all generations", ga.get_best_individual().get_genotype(), ga.get_best_individual_fenotype()

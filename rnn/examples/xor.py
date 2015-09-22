@@ -18,11 +18,10 @@ def createData():
 if __name__ == '__main__':
     inputs, xor = createData()
     
-    mlp = MLP(n = 0.1, 
+    mlp = MLP(n = 0.1,
               features = 2, 
-              topology = [2,1], 
-              momentum = 0.1)
+              topology = [2,1])
     
     errors = mlp.train_data(train = inputs, target = xor, epochs = 20)
     print errors
-    print mlp.get_weights()
+#     print mlp.get_weights()

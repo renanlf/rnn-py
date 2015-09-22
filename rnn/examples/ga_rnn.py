@@ -6,7 +6,6 @@ Created on 15/09/2015
 
 from ga.Genetic_Algorithm import Genetic_Algorithm
 from model.MLP import MLP
-from examples.xor import sig, dsig
 from model.File import File
 
 import numpy
@@ -41,9 +40,7 @@ if __name__ == '__main__':
     
     train, target = get_data()
     
-    mlp = MLP(function = sig,
-              dfunction=dsig,
-              features = 4,
+    mlp = MLP(features = 4,
               topology = [2,3])
     
     best_mlp = mlp
