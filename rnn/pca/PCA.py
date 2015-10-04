@@ -52,10 +52,10 @@ class PCA(object):
         #########################################################################
         #pega somente os autovetores de maior dimensao
         
-        new_E = new_E[0:dim,:]
+        new_E = new_E[:,0:dim]
         
         #calcula os novos valores
         
-        Z = new_E.dot(X)
+        Z = new_E.T.dot(X)
         
         return Z
