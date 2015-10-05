@@ -58,4 +58,4 @@ class PCA(object):
         
         Z = new_E.T.dot(X)
         
-        return Z
+        return Z.T

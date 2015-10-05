@@ -25,6 +25,7 @@ class MLP(object):
         self.__dfunction = dfunction
         self.__lenOutput = topology[-1]
         self.__n = n
+        self.__momentum = momentum
         for i, neuronsLayer in enumerate(topology):
             if i == 0:
                 self.__createLayer(neurons=neuronsLayer, weights=features, function=function, momentum=momentum)
@@ -68,7 +69,7 @@ class MLP(object):
             correctNeuron = correct[i]
             
             neuron.set_delta(self.__dfunction(neuron.get_out()) * (correctNeuron - output_neuron))
-            neuron.update_delta(self.__n)
+            neuron.update_delta(self.__n, self.__momentum)
             
         # cria uma lista com os indices das camadas ocultas            
         index_layers = range(0, index_last_layer)
@@ -93,7 +94,7 @@ class MLP(object):
                         
                 output_neuron = neuron.output(neuron._inputs)
                 neuron.set_delta(self.__dfunction(neuron.get_out()) * sum_next_layer_deltas)
-                neuron.update_delta(self.__n)
+                neuron.update_delta(self.__n, self.__momentum)
                 
         return out, correct
         

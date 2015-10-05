@@ -32,10 +32,10 @@ def get_data():
     data = File(u'../../../data')
     data.extract()
     
-    data.shuffle()
+#     data.shuffle()
     data.convertClass(function=f, length=3)
     
-    return data.allInputs, data.allCorrect
+    return data.allInputs, data.allClass
 
 if __name__ == '__main__':
     X, Y = get_data()
@@ -48,15 +48,19 @@ if __name__ == '__main__':
     
     Z2 = sk_pca.fit_transform(X)
     
-    print len(Z)
+    plots = []
     
-    pyplot.subplot(131)
-    pyplot.scatter(Z[0,:], Z[1,:])
+    plots.append(pyplot.scatter(Z[0:50,0], Z[0:50,1], color='red'))
+    plots.append(pyplot.scatter(Z[50:100,0], Z[50:100,1], color='blue'))
+    plots.append(pyplot.scatter(Z[100:150,0], Z[100:150,1], color='green'))
+    pyplot.legend(plots,['Iris-setosa','Iris-versicolor','Iris-virginica'])
     
-    pyplot.subplot(132)
-    pyplot.scatter(Z2[:,0], Z2[:,1])
-    
-    pyplot.subplot(133)
-    pyplot.scatter(X[:,0], X[:,1])
+#     pyplot.subplot(132)
+#     pyplot.scatter(Z2[0:50,0], Z2[0:50,1], color='red')
+#     pyplot.scatter(Z2[50:100,0], Z2[50:100,1], color='blue')
+#     pyplot.scatter(Z2[100:150,0], Z2[100:150,1], color='green')
+#     
+#     pyplot.subplot(133)
+#     pyplot.scatter(X[:,0], X[:,1])
     
     pyplot.show()

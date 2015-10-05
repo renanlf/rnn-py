@@ -5,8 +5,10 @@ Created on 22/09/2015
 '''
 import numpy
 
+alpha = 0.5
+
 def sig(x):
-    return 1 / (1 + numpy.e**(-x))
+    return 1 / (1 + numpy.e**(-x*alpha))
     
 def dsig(x):
-    return (numpy.e**(-x))/((1 + numpy.e**(-x))**2)
+    return (numpy.e**(-x*alpha))/((1 + numpy.e**(-x*alpha))**2)
