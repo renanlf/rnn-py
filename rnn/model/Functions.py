@@ -5,10 +5,10 @@ Created on 22/09/2015
 '''
 import numpy
 
-alpha = 0.5
+alpha = numpy.float128(1.0)
 
 def sig(x):
-    return 1 / (1 + numpy.e**(-x*alpha))
+    return numpy.float128(1.0) / (numpy.float128(1.0) + numpy.exp(-x*alpha))
     
 def dsig(x):
-    return (numpy.e**(-x*alpha))/((1 + numpy.e**(-x*alpha))**2)
+    return (numpy.exp(-x*alpha))/((numpy.float128(1.0) + numpy.exp(-x*alpha))**2)

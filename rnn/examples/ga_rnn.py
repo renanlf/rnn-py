@@ -77,7 +77,7 @@ if __name__ == '__main__':
                 
         return accept
     
-    ga = Genetic_Algorithm(individuals = 100, 
+    ga = Genetic_Algorithm(individuals = 1000, 
                            mutation_rate = 0.1,
                            # (4 caracteristicas + 1 do bias) * 2 neuronios = 10
                            # (2 saidas de neuronio + 1 do bias) * 3 neuronios de saida = 9
@@ -87,7 +87,7 @@ if __name__ == '__main__':
                            genotype_type = Genetic_Algorithm.TYPE_FLOAT)
     
 #     ga.print_individuals()
-    ga.execute(generations = 100)
+    ga.execute(generations = 100, log=True)
 #     ga.print_individuals()
     print "Best Individual for all generations", ga.get_best_individual().get_genotype(), ga.get_best_individual_fenotype()
     

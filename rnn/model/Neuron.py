@@ -21,7 +21,7 @@ class Neuron(object):
         '''
         # caso queira passar os pesos ou deixar que o construtor os crie
         if(type(weights) == int):
-            self.__weights = numpy.random.uniform(-0.5,0.5,weights)
+            self.__weights = numpy.float128(numpy.random.uniform(-0.5,0.5,weights))
             self.__Deltas = numpy.zeros(weights)
         else:
             self.__weights = weights
@@ -29,7 +29,7 @@ class Neuron(object):
             
         self.__function = function
         
-        self.__bias = numpy.random.uniform(-0.5,0.5,1)
+        self.__bias = numpy.float128(numpy.random.uniform(-0.5,0.5,1))
         self.__Delta_bias = 0
         self.__delta = 0
         
