@@ -18,10 +18,33 @@ class RBF(object):
         '''
         Constructor
         '''
-        self.__rbfneurons = []
+        self.__rbf_neurons = []
         self.__output_neurons = []
         self.__len_output_layer = len_output_layer
-            
+        
+    def get_rbf_neurons(self):
+        return self.__rbf_neurons
+    
+    def get_rbf_for_label(self, label):
+        neurons = []
+        
+        for rbf_neuron in self.__rbf_neurons:
+            if rbf_neuron.get_label() == label:
+                
+                neurons.append(rbf_neuron)
+                
+        return neurons
+    
+    def get_rbf_for_not_label(self, label):
+        neurons = []
+        
+        for rbf_neuron in self.__rbf_neurons:
+            if rbf_neuron.get_label() != label:
+                
+                neurons.append(rbf_neuron)
+                
+        return neurons
+    
 def gaussian(x):
     return 1.0/numpy.exp((-x)**2)
             

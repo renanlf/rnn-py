@@ -24,11 +24,17 @@ class PCA(object):
             dim = len(self.__data[0])
             
         #carrega a transposta dos dados de entrada...
+
+        mean_data = numpy.mean(self.__data.T, axis=1)
+        
+        for i, pattern in enumerate(self.__data):
+            self.__data[i] = pattern - mean_data
         
         X = self.__data.T
         
         #matriz de covariancia
         C = numpy.cov(X)
+#         C = X.dot(self.__data)
         
         #calcula os autovalores(values) e autovetores(E)
         values, E = numpy.linalg.eig(C)
@@ -56,6 +62,6 @@ class PCA(object):
         
         #calcula os novos valores
         
-        Z = new_E.T.dot(X)
+        Z = self.__data.dot(new_E)
         
-        return Z.T
+        return Z
