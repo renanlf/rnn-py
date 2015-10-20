@@ -1,3 +1,4 @@
+# encoding: utf-8
 '''
 Created on 02/10/2015
 
@@ -24,6 +25,7 @@ def get_data():
             
         elif x == 'Iris-virginica':
             result[2] = 1
+            
         else:
             raise ValueError
         
@@ -47,6 +49,8 @@ if __name__ == '__main__':
     sk_pca = PCA(n_components=2)
     
     Z2 = sk_pca.fit_transform(X)
+    
+    print 'Diferença entre o meu PCA e o do sklearn', numpy.sum(Z - Z2)
     
     plots = []
     

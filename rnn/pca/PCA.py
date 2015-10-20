@@ -1,3 +1,4 @@
+# encoding: utf-8
 '''
 Created on 02/10/2015
 
@@ -22,46 +23,47 @@ class PCA(object):
     
         if dim == 0:
             dim = len(self.__data[0])
-            
-        #carrega a transposta dos dados de entrada...
-
-        mean_data = numpy.mean(self.__data.T, axis=1)
         
-        for i, pattern in enumerate(self.__data):
-            self.__data[i] = pattern - mean_data
+        # carregando variaveis
+        X = self.__data
+        X_T = X.T
         
-        X = self.__data.T
+        #calculando a media
+        mean_data = numpy.mean(X_T, axis=1)
         
-        #matriz de covariancia
-        C = numpy.cov(X)
-#         C = X.dot(self.__data)
+        # subtraindo a media dos atributos para centralizar os dados
+        for i, pattern in enumerate(X):
+            X[i] = pattern - mean_data
         
-        #calcula os autovalores(values) e autovetores(E)
-        values, E = numpy.linalg.eig(C)
+        # como os dados estão centralizados obtenho a matriz de covariancia desta forma
+        C = X_T.dot(X)
+        
+        #calcula os autovalores(values) e autovetores(vectors)
+        values, vectors = numpy.linalg.eig(C)
         
         
         #######################################################################
         ############calculos utilizados para ordenar os autovetores############
         #######################################################################
         
-        len_E = len(E)
+        len_E = len(vectors)
         len_new_E = 0
-        new_E = E
+        new_vectors = vectors
         
         while len_new_E < len_E:
             index = numpy.argmax(values)
             values[index] = -10000
             
-            new_E[:, len_new_E] = E[:, index]
+            new_vectors[:, len_new_E] = vectors[:, index]
             len_new_E += 1
             
         #########################################################################
-        #pega somente os autovetores de maior dimensao
         
-        new_E = new_E[:,0:dim]
+        #pega somente os dim primeiros autovetores
         
-        #calcula os novos valores
+        new_vectors = new_vectors[:,0:dim]
         
-        Z = self.__data.dot(new_E)
+        #calcula os novos valores        
+        Z = X.dot(new_vectors)
         
         return Z
