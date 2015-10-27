@@ -25,6 +25,7 @@ class PCA(object):
             dim = len(self.__data[0])
         
         # carregando variaveis
+        
         X = self.__data
         X_T = X.T
         

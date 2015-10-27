@@ -7,6 +7,7 @@ Created on 22/09/2015
 from model.Neuron import Neuron
 
 import numpy
+from rbf.OutputNeuron import OutputNeuron
 
 class RBF(object):
     '''
@@ -29,7 +30,8 @@ class RBF(object):
         neurons = []
         
         for rbf_neuron in self.__rbf_neurons:
-            if rbf_neuron.get_label() == label:
+            numpy.equal
+            if sum(rbf_neuron.get_label() == label) == len(label):
                 
                 neurons.append(rbf_neuron)
                 
@@ -39,11 +41,23 @@ class RBF(object):
         neurons = []
         
         for rbf_neuron in self.__rbf_neurons:
-            if rbf_neuron.get_label() != label:
+            if not sum(rbf_neuron.get_label() == label) == len(label):
                 
                 neurons.append(rbf_neuron)
                 
         return neurons
+    
+    def output(self, pattern):
+        result = numpy.zeros(self.__len_output_layer)
+        
+        for i, neuron in enumerate(self.__output_neurons):
+            result[i] = neuron.output(rbf=self, pattern=pattern)
+            
+        return result
+            
+    def add_neuron(self, label):
+        self.__output_neurons.append(OutputNeuron(label=label))
+        
     
 def gaussian(x):
     return 1.0/numpy.exp((-x)**2)

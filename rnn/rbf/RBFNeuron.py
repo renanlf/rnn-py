@@ -1,3 +1,4 @@
+# encoding: utf-8
 '''
 Created on 22/09/2015
 
@@ -40,3 +41,6 @@ class RBFNeuron(object):
     
     def set_weight(self, weight):
         self.__weight = weight
+        
+    def get_label(self):
+        return self.__label
