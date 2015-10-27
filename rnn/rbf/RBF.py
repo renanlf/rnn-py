@@ -23,6 +23,13 @@ class RBF(object):
         self.__output_neurons = []
         self.__len_output_layer = len_output_layer
         
+        for i in xrange(len_output_layer):
+            label = numpy.zeros(len_output_layer)
+            
+            label[i] = 1.0
+            
+            self.add_neuron(label=label)
+        
     def get_rbf_neurons(self):
         return self.__rbf_neurons
     

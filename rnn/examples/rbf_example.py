@@ -34,12 +34,12 @@ def get_data():
     data.shuffle()
     data.convertClass(function=f, length=3)
     
-    return data.allInputs[0:75], data.allCorrect[0:75], data.allInputs[75:150], data.allCorrect[75:150]
+    return data.split(rate=0.7)
 
 if __name__ == '__main__':
     train, target, test, target_test = get_data()
     
-    rbf = RBF(3)
+    rbf = RBF(len_output_layer=3)
     
     DDA.train(data = train, target = target, rbf = rbf)
     
@@ -47,9 +47,14 @@ if __name__ == '__main__':
     
     for rbf_neuron in neurons:
         print rbf_neuron.get_centroid(), rbf_neuron.get_radius(), rbf_neuron.get_label()
+    
         
+    correct = 0.0
     for pattern, label in zip(test, target_test):
         out = rbf.output(pattern=pattern)
         
-        print out, label
+        if numpy.argmax(out) == numpy.argmax(label):
+            correct += 1.0
+        
+    print correct/len(target_test)
         
