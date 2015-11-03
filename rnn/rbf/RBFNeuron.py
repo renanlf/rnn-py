@@ -23,9 +23,9 @@ class RBFNeuron(object):
         self.__label  = label
         
     def output(self, t):
-        distance = numpy.sum(self.__centroid - t)**2
+        distance = numpy.sum((self.__centroid - t)**2)
         
-        return numpy.exp(- distance / self.__radius**2)
+        return numpy.exp(- distance**2 / self.__radius**2)
         
     def get_radius(self):
         return self.__radius

@@ -34,27 +34,39 @@ def get_data():
     data.shuffle()
     data.convertClass(function=f, length=3)
     
-    return data.split(rate=0.7)
+    return data.split(rate=0.5)
 
 if __name__ == '__main__':
-    train, target, test, target_test = get_data()
     
-    rbf = RBF(len_output_layer=3)
+    values = []
     
-    DDA.train(data = train, target = target, rbf = rbf)
-    
-    neurons = rbf.get_rbf_neurons()
-    
-    for rbf_neuron in neurons:
-        print rbf_neuron.get_centroid(), rbf_neuron.get_radius(), rbf_neuron.get_label()
-    
+    i = 0
+    while i < 100:
+        i += 1
         
-    correct = 0.0
-    for pattern, label in zip(test, target_test):
-        out = rbf.output(pattern=pattern)
+        train, target, test, target_test = get_data()
         
-        if numpy.argmax(out) == numpy.argmax(label):
-            correct += 1.0
+        rbf = RBF(len_output_layer=3)
         
-    print correct/len(target_test)
+        DDA.train(data=train, target=target, rbf=rbf, epochs=80)
+        
+        neurons = rbf.get_rbf_neurons()
+        
+        for rbf_neuron in neurons:
+            print rbf_neuron.get_centroid(), rbf_neuron.get_radius(), rbf_neuron.get_label(), rbf_neuron.get_weight()
+        
+            
+        correct = 0.0
+        for pattern, label in zip(test, target_test):
+            out = rbf.output(pattern=pattern)
+            
+            if numpy.argmax(out) == numpy.argmax(label):
+                correct += 1.0
+        value = correct/len(target_test)
+        print value
+        
+        values.append(value)
+        
+    print numpy.mean(values), numpy.std(values)
+    
         
